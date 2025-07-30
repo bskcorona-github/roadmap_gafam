@@ -17,6 +17,31 @@ ul {
 }
                </style>
         <title>My First Webpage</title>
+    </head>
+    <body>
+        <h1>My First Webpage</h1>
+        <p>This is my first webpage.</p>
+        <a href="https://portfolio-bsk-coronas-projects.vercel.app/">portfolio</a>
+
+        <div style="text-align: center; margin: 20px;">
+            <button id="addTechBtn">新しい技術を追加</button>
+            <button id="changeColorBtn">色を変更</button>
+            <button id="showStatsBtn">統計を表示</button>
+        </div>
+
+        <ul id="techList">
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>JavaScript</li>
+            <li>React</li>
+            <li>Node.js</li>
+            <li>Express</li>
+            <li>MongoDB</li>
+            <li>MySQL</li>
+            <li>PostgreSQL</li>
+            <li>Docker</li>
+        </ul>
+
         <script>
 // alert("Hello World");
 
@@ -36,23 +61,61 @@ console.log("=== 技術スタック一覧 ===");
 technologies.forEach((tech, index) => {
     console.log(`${index + 1}. ${tech}`);
 });
+
+//DOM操作の学習 -day4
+console.log("DOM操作の学習開始");
+const addTechBtn = document.getElementById("addTechBtn");
+const changeColorBtn = document.getElementById("changeColorBtn");
+const showStatsBtn = document.getElementById("showStatsBtn");
+const techList = document.getElementById("techList");
+
+function addNewTech(){
+    const newTechs =["Vue.js","Next.js","Tailwind CSS","GraphQL","AWS","Firebase","Docker","Kubernetes"];
+    const randomTech = newTechs[Math.floor(Math.random()*newTechs.length)];
+//配列に追加
+    technologies.push(randomTech);
+
+    //HTMLに新しい要素を追加
+    const newLi = document.createElement("li");
+    newLi.textContent = randomTech;
+    techList.appendChild(newLi);
+
+    console.log("新しい技術:",randomTech);
+    console.log("技術スタック数:",technologies.length);
+}
+    //ボタンの色を変更
+    function changeColor(){
+        const colors =["red","green","blue","yellow","purple","orange","pink","brown","gray","black"];
+        const randomColor = colors[Math.floor(Math.random()*colors.length)];
+        document.body.style.backgroundColor = randomColor;
+        console.log("新しい色:",randomColor);
+}
+
+//統計を表示する関数
+function showStats(){
+    const stats ={
+        totalTechs:technologies.length,
+        frontendTechs:technologies.filter(tech=>["HTML","CSS","JavaScript","React","Vue.js","Next.js","Tailwind CSS"].includes(tech)).length,
+        backendTechs:technologies.filter(tech=>["Node.js","Express","MongoDB","MySQL","PostgreSQL","GraphQL"].includes(tech)).length,
+        devOpsTechs:technologies.filter(tech=>["Docker","Kubernetes"].includes(tech)).length,
+        cloudTechs:technologies.filter(tech=>["AWS","Firebase"].includes(tech)).length,
+    }
+console.log("=== 技術スタック統計 ===");
+    console.log("総技術数:", stats.totalTechs);
+    console.log("フロントエンド技術:", stats.frontendTechs);
+    console.log("バックエンド技術:", stats.backendTechs);
+    console.log("DevOps技術:", stats.devOpsTechs);
+    console.log("クラウド技術:", stats.cloudTechs);
+
+    //アラートで統計表示
+    alert(`総技術数:${stats.totalTechs}\nフロントエンド技術:${stats.frontendTechs}\nバックエンド技術:${stats.backendTechs}\nDevOps技術:${stats.devOpsTechs}\nクラウド技術:${stats.cloudTechs}`);
+}
+// イベントリスナーの設定
+addTechBtn.addEventListener('click', addNewTech);
+changeColorBtn.addEventListener('click', changeColor);
+showStatsBtn.addEventListener('click', showStats);
+
+console.log("DOM操作の準備完了！");
         </script>
-    </head>
-    <body>
-        <h1>My First Webpage</h1>
-        <p>This is my first webpage.</p>
-        <a href="https://portfolio-bsk-coronas-projects.vercel.app/">portfolio</a>
-        <ul>
-            <li>HTML</li>
-            <li>CSS</li>
-            <li>JavaScript</li>
-            <li>React</li>
-            <li>Node.js</li>
-            <li>Express</li>
-            <li>MongoDB</li>
-            <li>MySQL</li>
-            <li>PostgreSQL</li>
-            <li>Docker</li>
-        </ul>
     </body>
 </html>
