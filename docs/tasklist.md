@@ -1,0 +1,105 @@
+# Week 1 タスクリスト
+
+## 学習目標
+- Web基礎固め（HTML/CSS/JavaScript）
+- CS基礎の概念理解開始
+
+## 完了済みタスク ✅
+
+### Day 1: HTML基礎 ✅
+- [x] HTML5構造の理解（`<!DOCTYPE html>`, `<html>`, `<head>`, `<body>`）
+- [x] 基本タグの習得（`<h1>`, `<p>`, `<ul>`, `<li>`, `<a>`, `<img>`）
+- [x] ブラウザでの表示確認
+- [x] 成果物: `my-first-webpage/index.html`
+- [x] 学習時間: 45分
+- [x] レビュー: Correctness 5/5, Readability 4/5, Testing 5/5
+
+### Day 2: CSS基礎 ✅
+- [x] CSS基本構文の理解（`<style>`タグ内）
+- [x] プロパティの習得（`background-color`, `color`, `text-align`, `margin`, `padding`）
+- [x] 計算量の概念理解（O(n) - 線形時間）
+- [x] 成果物: `my-first-webpage/index.html`（CSS追加）
+- [x] 学習時間: 60分
+- [x] レビュー: Correctness 5/5, Readability 4/5, Testing 5/5
+
+### Day 3: JavaScript基礎 ✅
+- [x] JavaScript基本構文（変数、コンソールログ、アラート）
+- [x] 配列操作（定義、アクセス、追加、ループ）
+- [x] `const`と`let`の使い分け
+- [x] テンプレートリテラル（`${}`構文）
+- [x] `forEach()`メソッドによる配列のループ処理
+- [x] 成果物: `my-first-webpage/index.html`（JavaScript追加）
+- [x] 学習時間: 60分
+- [x] レビュー: Correctness 5/5, Readability 5/5, Testing 5/5
+
+### Day 4: DOM操作 + データ構造 ✅
+- [x] DOM要素の取得と操作（`getElementById`, `createElement`, `appendChild`）
+- [x] イベント処理（`addEventListener`, クリックイベント）
+- [x] 動的なHTML生成（新しい要素の作成と追加）
+- [x] データ構造の実践的使用（配列、オブジェクト、filter関数）
+- [x] JavaScriptの実行タイミング（`<script>`タグの配置）
+- [x] 成果物: `my-first-webpage/index.html`（DOM操作機能追加）
+- [x] 学習時間: 60分
+- [x] レビュー: Correctness 5/5, Readability 5/5, Testing 5/5
+
+## 残りタスク 🔄
+
+### Day 5: イベント処理 + ループ・条件分岐
+- [ ] より高度なイベント処理の実装
+- [ ] ループ処理の実践（for, while, forEach）
+- [ ] 条件分岐の活用（if, else, switch）
+- [ ] フォーム処理とバリデーション
+- [ ] 計算科学基礎：アルゴリズムの計算量（O(n²) - 二乗時間）
+- [ ] 成果物: インタラクティブなフォーム機能
+- [ ] 学習時間: 60分（イベント処理: 45分 + CS: 15分）
+
+### Day 6: API通信 + アルゴリズム基礎
+- [ ] Fetch APIの基本使用
+- [ ] JSONデータの処理
+- [ ] 非同期処理の理解（Promise, async/await）
+- [ ] エラーハンドリング
+- [ ] 計算科学基礎：ソートアルゴリズム（バブルソート、クイックソート）
+- [ ] 成果物: 外部APIとの通信機能
+- [ ] 学習時間: 60分（API通信: 45分 + CS: 15分）
+
+### Day 7: Git基礎 + 簡単なLeetCode問題
+- [ ] Gitの基本コマンド（init, add, commit, push）
+- [ ] GitHubリポジトリの管理
+- [ ] ブランチとマージの概念
+- [ ] 簡単なLeetCode問題（Two Sum, Valid Parentheses）
+- [ ] 計算科学基礎：時間計算量と空間計算量
+- [ ] 成果物: Git管理されたプロジェクト + LeetCode解答
+- [ ] 学習時間: 60分（Git: 30分 + LeetCode: 30分）
+
+## 週間進捗サマリー
+
+### 完了状況
+- **完了タスク**: 4/7 (57%)
+- **累計学習時間**: 225分 / 420分 (54%)
+- **残り時間**: 195分
+
+### 習得技術
+- ✅ HTML5
+- ✅ CSS3
+- ✅ JavaScript基礎
+- ✅ DOM操作
+- ✅ データ構造基礎
+- 🔄 イベント処理（進行中）
+- 🔄 API通信（未着手）
+- 🔄 Git基礎（未着手）
+- 🔄 LeetCode問題（未着手）
+
+### 成果物
+- ✅ `my-first-webpage/index.html` - インタラクティブなWebページ
+- 🔄 フォーム機能（予定）
+- 🔄 API通信機能（予定）
+- 🔄 Git管理プロジェクト（予定）
+
+## 次のマイルストーン
+- **W1完了**: 7タスク完了
+- **Q1完了**: PR≥30, LeetCode Easy≥50, 本番URL1
+
+---
+
+**最終更新**: 2025年07月30日
+**現在の進捗**: Day 4完了、Day 5準備中 
