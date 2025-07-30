@@ -7,7 +7,7 @@
 ## 完了タスク
 
 ### Day 1: HTML基礎 ✅
-**日付**: 2024年12月19日  
+**日付**: 2025年07月30日  
 **時間**: 45分  
 **成果物**: `my-first-webpage/index.html`  
 **習得内容**:
@@ -18,7 +18,7 @@
 **レビュー**: Correctness 5/5, Readability 4/5, Testing 5/5
 
 ### Day 2: CSS基礎 ✅
-**日付**: 2024年12月19日  
+**日付**: 2025年07月30日  
 **時間**: 60分（CSS: 45分 + CS: 15分）  
 **成果物**: `my-first-webpage/index.html`（CSS追加）  
 **習得内容**:
@@ -41,8 +41,20 @@
 
 **レビュー**: Correctness 5/5, Readability 5/5, Testing 5/5
 
+### Day 4: DOM操作 + データ構造 ✅
+**日付**: 2024年12月19日  
+**時間**: 60分（DOM操作: 45分 + CS: 15分）  
+**成果物**: `my-first-webpage/index.html`（DOM操作機能追加）  
+**習得内容**:
+- DOM要素の取得と操作（`getElementById`, `createElement`, `appendChild`）
+- イベント処理（`addEventListener`, クリックイベント）
+- 動的なHTML生成（新しい要素の作成と追加）
+- データ構造の実践的使用（配列、オブジェクト、filter関数）
+- JavaScriptの実行タイミング（`<script>`タグの配置）
+
+**レビュー**: Correctness 5/5, Readability 5/5, Testing 5/5
+
 ## 今週の残りタスク
-- Day 4: DOM操作 + データ構造
 - Day 5: イベント処理 + ループ・条件分岐
 - Day 6: API通信 + アルゴリズム基礎
 - Day 7: Git基礎 + 簡単なLeetCode問題
@@ -51,4 +63,5 @@
 - Day 1: 45分
 - Day 2: 60分
 - Day 3: 60分
-- **合計**: 165分 / 週間目標: 420分（平日5h + 日曜3h） 
+- Day 4: 60分
+- **合計**: 225分 / 週間目標: 420分（平日5h + 日曜3h） 
