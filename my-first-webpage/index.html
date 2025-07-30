@@ -17,6 +17,26 @@ ul {
 }
                </style>
         <title>My First Webpage</title>
+        <script>
+// alert("Hello World");
+
+const message = "javascript学習開始";
+console.log(message);
+
+const technologies = ["HTML", "CSS", "JavaScript", "React", "Node.js", "Express", "MongoDB", "MySQL", "PostgreSQL", "Docker"];
+
+console.log("技術スタック数:", technologies.length);
+console.log("最初の技術:", technologies[0]);
+console.log("最後の技術:", technologies[technologies.length - 1]);
+
+technologies.push("TypeScript");
+console.log("TypeScript追加後:", technologies);
+
+console.log("=== 技術スタック一覧 ===");
+technologies.forEach((tech, index) => {
+    console.log(`${index + 1}. ${tech}`);
+});
+        </script>
     </head>
     <body>
         <h1>My First Webpage</h1>
