@@ -55,8 +55,6 @@
 ## 残りタスク 🔄
 
 ### Day 6: API通信 + アルゴリズム基礎
-
-### Day 6: API通信 + アルゴリズム基礎
 - [ ] Fetch APIの基本使用
 - [ ] JSONデータの処理
 - [ ] 非同期処理の理解（Promise, async/await）
