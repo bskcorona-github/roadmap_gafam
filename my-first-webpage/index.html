@@ -41,7 +41,37 @@ ul {
             <li>PostgreSQL</li>
             <li>Docker</li>
         </ul>
-
+        //Day 5: フォーム機能とイベント処理
+        <div style="margin: 20px; padding: 20px; border: 2px solid #ddd; border-radius: 10px;">
+            <h2>技術スタック管理フォーム</h2>
+            <form id="techForm">
+                <div style="margin: 10px 0;">
+                    <label for="techName">技術名:</label>
+                    <input type="text" id="techName" placeholder="例: React" required>
+                </div>
+                <div style="margin: 10px 0;">
+                    <label for="techCategory">カテゴリ:</label>
+                    <select id="techCategory" required>
+                        <option value="">選択してください</option>
+                        <option value="frontend">フロントエンド</option>
+                        <option value="backend">バックエンド</option>
+                        <option value="devops">DevOps</option>
+                        <option value="cloud">クラウド</option>
+                    </select>
+                </div>
+                <div style="margin: 10px 0;">
+                    <label for="techLevel">習熟度:</label>
+                    <input type="range" id="techLevel" min="1" max="5" value="3">
+                    <span id="levelDisplay">3</span>
+                </div>
+                <button type="submit">技術を追加</button>
+                <button type="button" id="clearForm">フォームクリア</button>
+            </form>
+        </div>
+        <div style="margin: 20px;">
+            <h3>技術スタック一覧</h3>
+            <div id="techDisplay"></div>
+        </div>
         <script>
 // alert("Hello World");
 
@@ -116,6 +146,196 @@ changeColorBtn.addEventListener('click', changeColor);
 showStatsBtn.addEventListener('click', showStats);
 
 console.log("DOM操作の準備完了！");
+
+
+
+
+// Day 5: イベント処理 + ループ・条件分岐
+console.log("=== Day 5: イベント処理 + ループ・条件分岐学習開始 ===");
+
+// フォーム要素の取得
+const techForm = document.getElementById('techForm');
+const techName = document.getElementById('techName');
+const techCategory = document.getElementById('techCategory');
+const techLevel = document.getElementById('techLevel');
+const levelDisplay = document.getElementById('levelDisplay');
+const clearFormBtn = document.getElementById('clearForm');
+const techDisplay = document.getElementById('techDisplay');
+
+// 技術データを格納する配列（オブジェクト形式）
+let techData = [
+    { name: "HTML", category: "frontend", level: 4 },
+    { name: "CSS", category: "frontend", level: 3 },
+    { name: "JavaScript", category: "frontend", level: 4 },
+    { name: "React", category: "frontend", level: 3 },
+    { name: "Node.js", category: "backend", level: 2 },
+    { name: "Express", category: "backend", level: 2 },
+    { name: "MongoDB", category: "backend", level: 1 },
+    { name: "MySQL", category: "backend", level: 1 },
+    { name: "PostgreSQL", category: "backend", level: 1 },
+    { name: "Docker", category: "devops", level: 1 }
+];
+
+// 習熟度レベルの表示更新
+techLevel.addEventListener('input', function() {
+    levelDisplay.textContent = this.value;
+});
+
+// フォームクリア機能
+clearFormBtn.addEventListener('click', function() {
+    techForm.reset();
+    levelDisplay.textContent = '3';
+    console.log("フォームをクリアしました");
+});
+
+// フォーム送信処理
+techForm.addEventListener('submit', function(e) {
+    e.preventDefault(); // デフォルトの送信を防ぐ
+    
+    // フォームデータの取得
+    const name = techName.value.trim();
+    const category = techCategory.value;
+    const level = parseInt(techLevel.value);
+    
+    // バリデーション（条件分岐の実践）
+    if (name === '') {
+        alert('技術名を入力してください');
+        return;
+    }
+    
+    if (category === '') {
+        alert('カテゴリを選択してください');
+        return;
+    }
+    
+    // 重複チェック（ループ処理の実践）
+    let isDuplicate = false;
+    for (let i = 0; i < techData.length; i++) {
+        if (techData[i].name.toLowerCase() === name.toLowerCase()) {
+            isDuplicate = true;
+            break;
+        }
+    }
+    
+    if (isDuplicate) {
+        alert('この技術は既に登録されています');
+        return;
+    }
+    
+    // 新しい技術データを追加
+    const newTech = { name, category, level };
+    techData.push(newTech);
+    
+    // 配列にも追加（既存機能との連携）
+    technologies.push(name);
+    
+    // 表示を更新
+    updateTechDisplay();
+    
+    // フォームをクリア
+    techForm.reset();
+    levelDisplay.textContent = '3';
+    
+    console.log(`新しい技術 "${name}" を追加しました（カテゴリ: ${category}, レベル: ${level}）`);
+});
+
+// 技術表示の更新関数
+function updateTechDisplay() {
+    techDisplay.innerHTML = '';
+    
+    // カテゴリ別にグループ化（ループ処理の実践）
+    const categories = ['frontend', 'backend', 'devops', 'cloud'];
+    
+    categories.forEach(category => {
+        const categoryTechs = techData.filter(tech => tech.category === category);
+        
+        if (categoryTechs.length > 0) {
+            const categoryDiv = document.createElement('div');
+            categoryDiv.style.margin = '10px 0';
+            categoryDiv.style.padding = '10px';
+            categoryDiv.style.border = '1px solid #ccc';
+            categoryDiv.style.borderRadius = '5px';
+            
+            // カテゴリ名の日本語化（条件分岐の実践）
+            let categoryName = '';
+            switch(category) {
+                case 'frontend':
+                    categoryName = 'フロントエンド';
+                    break;
+                case 'backend':
+                    categoryName = 'バックエンド';
+                    break;
+                case 'devops':
+                    categoryName = 'DevOps';
+                    break;
+                case 'cloud':
+                    categoryName = 'クラウド';
+                    break;
+                default:
+                    categoryName = category;
+            }
+            
+            categoryDiv.innerHTML = `<h4>${categoryName}</h4>`;
+            
+            // 各技術の表示（ループ処理の実践）
+            categoryTechs.forEach(tech => {
+                const techDiv = document.createElement('div');
+                techDiv.style.margin = '5px 0';
+                techDiv.style.padding = '5px';
+                techDiv.style.backgroundColor = '#f9f9f9';
+                techDiv.style.borderRadius = '3px';
+                
+                // 習熟度に応じた表示（条件分岐の実践）
+                let levelText = '';
+                if (tech.level >= 4) {
+                    levelText = '上級';
+                } else if (tech.level >= 3) {
+                    levelText = '中級';
+                } else {
+                    levelText = '初級';
+                }
+                
+                techDiv.innerHTML = `
+                    <strong>${tech.name}</strong> - 習熟度: ${levelText} (${tech.level}/5)
+                `;
+                categoryDiv.appendChild(techDiv);
+            });
+            
+            techDisplay.appendChild(categoryDiv);
+        }
+    });
+}
+
+// 初期表示
+updateTechDisplay();
+
+// 計算科学基礎：O(n²)の計算量を体験
+function demonstrateO2Complexity() {
+    console.log("=== O(n²)計算量のデモンストレーション ===");
+    const n = techData.length;
+    let operations = 0;
+    
+    // 二重ループでO(n²)を実演
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            operations++;
+            // 実際の処理（技術の比較など）
+            if (techData[i].category === techData[j].category) {
+                // 同じカテゴリの技術を比較
+            }
+        }
+    }
+    
+    console.log(`データ数: ${n}, 実行回数: ${operations}, 理論値: ${n * n}`);
+    console.log(`O(n²)計算量: データが2倍になると実行時間は4倍になる`);
+}
+
+// ページ読み込み完了時に計算量デモを実行
+window.addEventListener('load', function() {
+    demonstrateO2Complexity();
+});
+
+console.log("Day 5の機能が準備完了！");
         </script>
     </body>
 </html>
