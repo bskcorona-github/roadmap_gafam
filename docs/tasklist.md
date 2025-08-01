@@ -65,23 +65,24 @@
 - [x] 学習時間: 90分（API通信: 60分 + CS: 30分）
 - [x] レビュー: Correctness 5/5, Readability 5/5, Testing 5/5
 
-## 残りタスク 🔄
+### Day 7: Git基礎 + 簡単なLeetCode問題 ✅
+- [x] Gitの基本コマンド（init, add, commit, push）
+- [x] GitHubリポジトリの管理
+- [x] ブランチとマージの概念
+- [x] 簡単なLeetCode問題（Two Sum, Valid Parentheses）
+- [x] 計算科学基礎：時間計算量と空間計算量
+- [x] 成果物: Git管理されたプロジェクト + LeetCode解答
+- [x] 学習時間: 60分（Git: 30分 + LeetCode: 30分）
+- [x] レビュー: Correctness 5/5, Readability 5/5, Testing 5/5
 
-### Day 7: Git基礎 + 簡単なLeetCode問題
-- [ ] Gitの基本コマンド（init, add, commit, push）
-- [ ] GitHubリポジトリの管理
-- [ ] ブランチとマージの概念
-- [ ] 簡単なLeetCode問題（Two Sum, Valid Parentheses）
-- [ ] 計算科学基礎：時間計算量と空間計算量
-- [ ] 成果物: Git管理されたプロジェクト + LeetCode解答
-- [ ] 学習時間: 60分（Git: 30分 + LeetCode: 30分）
+## Week 1完了 ✅
 
 ## 週間進捗サマリー
 
 ### 完了状況
-- **完了タスク**: 6/7 (86%)
-- **累計学習時間**: 375分 / 420分 (89%)
-- **残り時間**: 45分
+- **完了タスク**: 7/7 (100%) ✅
+- **累計学習時間**: 435分 / 420分 (104%) ✅
+- **残り時間**: 0分 ✅
 
 ### 習得技術
 - ✅ HTML5
@@ -95,18 +96,19 @@
 - ✅ API通信
 - ✅ 非同期処理
 - ✅ アルゴリズム基礎
-- 🔄 Git基礎（未着手）
-- 🔄 LeetCode問題（未着手）
+- ✅ Git基礎
+- ✅ LeetCode問題
 
 ### 成果物
 - ✅ `my-first-webpage/index.html` - インタラクティブなWebページ（API通信・アルゴリズム比較機能付き）
-- 🔄 Git管理プロジェクト（予定）
+- ✅ Git管理プロジェクト
+- ✅ LeetCode解答集（Two Sum、Valid Parentheses）
 
 ## 次のマイルストーン
-- **W1完了**: 7タスク完了
+- **W1完了**: ✅ 7タスク完了
 - **Q1完了**: PR≥30, LeetCode Easy≥50, 本番URL1
 
 ---
 
 **最終更新**: 2025年07月30日
-**現在の進捗**: Day 6完了、Day 7準備中 
+**現在の進捗**: Week 1完了、Week 2準備中 
