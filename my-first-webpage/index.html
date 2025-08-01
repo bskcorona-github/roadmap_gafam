@@ -72,6 +72,46 @@ ul {
             <h3>技術スタック一覧</h3>
             <div id="techDisplay"></div>
         </div>
+
+
+        <!--day6:API通信機能-->
+
+    <!-- ユーザー検索フォーム -->
+    <div style="margin: 10px 0;">
+        <label for="githubUsername">ユーザー名を検索:</label>
+        <input type="text" id="githubUsername" placeholder="例: bskcorona" style="margin-left: 10px;">
+        <button type="button" id="fetchUserBtn">検索</button>
+
+        <!--リポジトリ検索フォーム-->
+        <div style="margin: 10px 0;">
+            <label for="repoUsername">リポジトリ検索:</label>
+            <input type="text" id="repoUsername" placeholder="例: facebook" style="margin-left: 10px;">
+            <button id="fetchReposBtn">リポジトリ取得</button>
+        </div>
+    <!-- ソート機能 -->
+    <div style="margin: 10px 0;">
+        <label for="sortSelect">ソート方法:</label>
+        <select id="sortSelect" style="margin-left: 10px;">
+            <option value="name">名前順</option>
+            <option value="stars">スター数順</option>
+            <option value="forks">フォーク数順</option>
+            <option value="updated">更新日順</option>
+        </select>
+        <button id="sortBtn">ソート実行</button>
+        <button id="compareAlgorithmsBtn">アルゴリズム比較</button>
+    </div>
+    
+    <!-- 結果表示エリア -->
+    <div id="apiResults" style="margin-top: 20px;"></div>
+    
+    <!-- アルゴリズム比較結果表示エリア -->
+    <div id="algorithmResults" style="margin-top: 20px;"></div>
+    
+    <!-- ローディング表示 -->
+    <div id="loading" style="display: none; text-align: center; margin: 20px;">
+        <p>データを取得中...</p>
+    </div>
+</div>
         <script>
 // alert("Hello World");
 
@@ -336,6 +376,554 @@ window.addEventListener('load', function() {
 });
 
 console.log("Day 5の機能が準備完了！");
+// Day 6: API通信 + アルゴリズム基礎
+console.log("=== Day 6: API通信 + アルゴリズム基礎学習開始 ===");
+
+// DOM要素の取得
+const githubUsername = document.getElementById('githubUsername');
+const fetchUserBtn = document.getElementById('fetchUserBtn');
+const repoUsername = document.getElementById('repoUsername');
+const fetchReposBtn = document.getElementById('fetchReposBtn');
+const sortSelect = document.getElementById('sortSelect');
+const sortBtn = document.getElementById('sortBtn');
+const compareAlgorithmsBtn = document.getElementById('compareAlgorithmsBtn');
+const apiResults = document.getElementById('apiResults');
+const algorithmResults = document.getElementById('algorithmResults');
+const loading = document.getElementById('loading');
+
+// 取得したデータを保存する変数
+let userData = null;
+let reposData = [];
+
+// 1. ユーザー情報取得機能
+async function fetchUserInfo(username) {
+    try {
+        showLoading(true);
+        
+        // GitHub APIからユーザー情報を取得
+        const response = await fetch(`https://api.github.com/users/${username}`);
+        
+        // レスポンスステータスをチェック
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // JSONデータに変換
+        const user = await response.json();
+        userData = user;
+        
+        // 結果を表示
+        displayUserInfo(user);
+        
+        console.log('ユーザー情報取得成功:', user);
+        
+    } catch (error) {
+        console.error('ユーザー情報取得エラー:', error);
+        showError(`ユーザー情報の取得に失敗しました: ${error.message}`);
+    } finally {
+        showLoading(false);
+    }
+}
+
+// 2. リポジトリ情報取得機能
+async function fetchRepositories(username) {
+    try {
+        showLoading(true);
+        
+        // GitHub APIからリポジトリ一覧を取得
+        const response = await fetch(`https://api.github.com/users/${username}/repos`);
+        
+        // レスポンスステータスをチェック
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // JSONデータに変換
+        const repos = await response.json();
+        reposData = repos;
+        
+        // 結果を表示
+        displayRepositories(repos);
+        
+        console.log('リポジトリ情報取得成功:', repos);
+        
+        // リポジトリ取得後にアルゴリズム比較を実行
+        demonstrateAlgorithmComplexity();
+        
+    } catch (error) {
+        console.error('リポジトリ情報取得エラー:', error);
+        showError(`リポジトリ情報の取得に失敗しました: ${error.message}`);
+    } finally {
+        showLoading(false);
+    }
+}
+
+// 3. ユーザー情報表示機能
+function displayUserInfo(user) {
+    const userInfo = `
+        <div style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background-color: white;">
+            <h3>👤 ユーザー情報</h3>
+            <div style="display: flex; align-items: center; margin: 10px 0;">
+                <img src="${user.avatar_url}" alt="Avatar" style="width: 60px; height: 60px; border-radius: 50%; margin-right: 15px;">
+                <div>
+                    <p><strong>名前:</strong> ${user.name || '未設定'}</p>
+                    <p><strong>ユーザー名:</strong> ${user.login}</p>
+                    <p><strong>フォロワー数:</strong> ${user.followers}</p>
+                    <p><strong>リポジトリ数:</strong> ${user.public_repos}</p>
+                    <p><strong>作成日:</strong> ${new Date(user.created_at).toLocaleDateString('ja-JP')}</p>
+                </div>
+            </div>
+            <p><strong>自己紹介:</strong> ${user.bio || '未設定'}</p>
+        </div>
+    `;
+    
+    apiResults.innerHTML = userInfo;
+}
+
+// 4. リポジトリ情報表示機能
+function displayRepositories(repos) {
+    if (repos.length === 0) {
+        apiResults.innerHTML = '<p>リポジトリが見つかりませんでした。</p>';
+        return;
+    }
+    
+    let reposHtml = `
+        <div style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background-color: white;">
+            <h3>📁 リポジトリ一覧 (${repos.length}件)</h3>
+    `;
+    
+    repos.forEach((repo, index) => {
+        reposHtml += `
+            <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                <h4>${index + 1}. ${repo.name}</h4>
+                <p><strong>説明:</strong> ${repo.description || '説明なし'}</p>
+                <p><strong>言語:</strong> ${repo.language || '不明'}</p>
+                <p><strong>スター数:</strong> ⭐ ${repo.stargazers_count}</p>
+                <p><strong>フォーク数:</strong> �� ${repo.forks_count}</p>
+                <p><strong>更新日:</strong> ${new Date(repo.updated_at).toLocaleDateString('ja-JP')}</p>
+                <a href="${repo.html_url}" target="_blank" style="color: #007bff;">GitHubで見る</a>
+            </div>
+        `;
+    });
+    
+    reposHtml += '</div>';
+    apiResults.innerHTML = reposHtml;
+}
+
+// 5. ソート機能（アルゴリズム基礎）
+function sortRepositories() {
+    if (reposData.length === 0) {
+        showError('ソートするリポジトリがありません。先にリポジトリを取得してください。');
+        return;
+    }
+    
+    const sortType = sortSelect.value;
+    let sortedRepos = [...reposData]; // 配列のコピーを作成
+    
+    console.log(`ソート開始: ${sortType}順`);
+    
+    // バブルソートアルゴリズムを実装
+    sortedRepos = quickSort(sortedRepos, sortType);
+    
+    // ソート結果を表示
+    displayRepositories(sortedRepos);
+    
+    console.log('ソート完了:', sortedRepos);
+}
+
+// 6. バブルソートアルゴリズム
+function bubbleSort(arr, sortType) {
+    const n = arr.length;
+    let operations = 0;
+    
+    for (let i = 0; i < n - 1; i++) {
+        for (let j = 0; j < n - i - 1; j++) {
+            operations++;
+            
+            let shouldSwap = false;
+            
+            // ソート条件を判定
+            switch (sortType) {
+                case 'name':
+                    shouldSwap = arr[j].name.toLowerCase() > arr[j + 1].name.toLowerCase();
+                    break;
+                case 'value':
+                    shouldSwap = arr[j] > arr[j + 1];
+                    break;
+                case 'stars':
+                    shouldSwap = arr[j].stargazers_count < arr[j + 1].stargazers_count;
+                    break;
+                case 'forks':
+                    shouldSwap = arr[j].forks_count < arr[j + 1].forks_count;
+                    break;
+                case 'updated':
+                    shouldSwap = new Date(arr[j].updated_at) < new Date(arr[j + 1].updated_at);
+                    break;
+            }
+            
+            // 要素を交換
+            if (shouldSwap) {
+                [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+            }
+        }
+    }
+    
+    console.log(`バブルソート完了: ${operations}回の比較を実行`);
+    console.log(`計算量: O(n²) - データ数: ${n}, 理論値: ${n * n}`);
+    
+    return arr;
+}
+
+// 7. クイックソートアルゴリズム（完全版）
+function quickSort(arr, sortType) {
+    // 再帰の終了条件
+    if (arr.length <= 1) {
+        console.log(`再帰終了: 配列長 ${arr.length} (ソート不要)`);
+        return arr;
+    }
+    
+    const n = arr.length;
+    console.log(`クイックソート開始: 配列長 ${n}, ソートタイプ: ${sortType}`);
+    
+    // ピボット選択（中央値）
+    const pivotIndex = Math.floor(arr.length / 2);
+    const pivot = arr[pivotIndex];
+    
+    // ピボットの表示（リポジトリ名または数値）
+    const pivotDisplay = pivot.name || pivot.stargazers_count || pivot.forks_count || pivot;
+    console.log(`ピボット選択: ${pivotDisplay} (インデックス: ${pivotIndex})`);
+    
+    const left = [];
+    const right = [];
+    const equal = [];
+    let comparisons = 0;
+    
+    // 配列を分割
+    for (let i = 0; i < arr.length; i++) {
+        if (i === pivotIndex) {
+            equal.push(arr[i]);
+            continue; // ピボットはequalに追加してスキップ
+        }
+        
+        let comparison = 0;
+        
+        // 比較処理
+        switch (sortType) {
+            case 'name':
+                comparison = arr[i].name.toLowerCase().localeCompare(pivot.name.toLowerCase());
+                break;
+            case 'value':
+                comparison = arr[i] - pivot;
+                break;
+            case 'stars':
+                comparison = arr[i].stargazers_count - pivot.stargazers_count;
+                break;
+            case 'forks':
+                comparison = arr[i].forks_count - pivot.forks_count;
+                break;
+            case 'updated':
+                comparison = new Date(arr[i].updated_at) - new Date(pivot.updated_at);
+                break;
+        }
+        
+        comparisons++;
+        
+        // 配列に振り分け
+        if (comparison < 0) {
+            left.push(arr[i]);
+        } else if (comparison > 0) {
+            right.push(arr[i]);
+        } else {
+            equal.push(arr[i]);
+        }
+    }
+    
+    console.log(`分割完了: 左側 ${left.length}件, 中央 ${equal.length}件, 右側 ${right.length}件`);
+    console.log(`比較回数: ${comparisons}回`);
+    
+    // 再帰的にソート
+    const sortedLeft = quickSort(left, sortType);
+    const sortedRight = quickSort(right, sortType);
+    
+    // 結果を結合
+    const result = [...sortedLeft, ...equal, ...sortedRight];
+    console.log(`結合完了: 配列長 ${result.length}`);
+    
+    return result;
+}
+// 8. ローディング表示制御
+function showLoading(show) {
+    loading.style.display = show ? 'block' : 'none';
+}
+
+// 9. エラー表示機能
+function showError(message) {
+    apiResults.innerHTML = `
+        <div style="border: 1px solid #dc3545; background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            <h4>❌ エラー</h4>
+            <p>${message}</p>
+        </div>
+    `;
+}
+
+// 10. イベントリスナーの設定
+fetchUserBtn.addEventListener('click', () => {
+    const username = githubUsername.value.trim();
+    if (username) {
+        fetchUserInfo(username);
+    } else {
+        showError('ユーザー名を入力してください。');
+    }
+});
+
+fetchReposBtn.addEventListener('click', () => {
+    const username = repoUsername.value.trim();
+    if (username) {
+        fetchRepositories(username);
+    } else {
+        showError('ユーザー名を入力してください。');
+    }
+});
+
+sortBtn.addEventListener('click', sortRepositories);
+
+// アルゴリズム比較ボタンのイベントリスナー
+compareAlgorithmsBtn.addEventListener('click', function() {
+    console.log("アルゴリズム比較を開始します...");
+    
+    // 比較結果をUIに表示
+    const results = performAlgorithmComparison();
+    displayAlgorithmResults(results);
+});
+
+// アルゴリズム比較を実行する関数
+function performAlgorithmComparison() {
+    const results = {
+        smallDataset: {},
+        largeDataset: {},
+        repositoryData: {}
+    };
+    
+    // 小さなデータセットでの比較
+    const testData = [5, 2, 8, 1, 9, 3, 7, 4, 6];
+    
+    const bubbleStart = performance.now();
+    bubbleSort([...testData], 'value');
+    const bubbleTime = performance.now() - bubbleStart;
+    
+    const quickStart = performance.now();
+    quickSort([...testData], 'value');
+    const quickTime = performance.now() - quickStart;
+    
+    results.smallDataset = {
+        bubbleTime: bubbleTime.toFixed(3),
+        quickTime: quickTime.toFixed(3),
+        dataSize: testData.length
+    };
+    
+    // 大きなデータセットでの比較
+    const largeDataset = generateLargeDataset(1000);
+    
+    const bubbleLargeStart = performance.now();
+    bubbleSort([...largeDataset], 'value');
+    const bubbleLargeTime = performance.now() - bubbleLargeStart;
+    
+    const quickLargeStart = performance.now();
+    quickSort([...largeDataset], 'value');
+    const quickLargeTime = performance.now() - quickLargeStart;
+    
+    results.largeDataset = {
+        bubbleTime: bubbleLargeTime.toFixed(3),
+        quickTime: quickLargeTime.toFixed(3),
+        dataSize: largeDataset.length,
+        efficiencyRatio: (bubbleLargeTime / quickLargeTime).toFixed(2)
+    };
+    
+    // リポジトリデータでの比較
+    if (reposData.length > 0) {
+        const bubbleRepoStart = performance.now();
+        bubbleSort([...reposData], 'name');
+        const bubbleRepoTime = performance.now() - bubbleRepoStart;
+        
+        const quickRepoStart = performance.now();
+        quickSort([...reposData], 'name');
+        const quickRepoTime = performance.now() - quickRepoStart;
+        
+        results.repositoryData = {
+            bubbleTime: bubbleRepoTime.toFixed(3),
+            quickTime: quickRepoTime.toFixed(3),
+            dataSize: reposData.length,
+            theoreticalBubble: reposData.length * reposData.length,
+            theoreticalQuick: Math.floor(reposData.length * Math.log2(reposData.length))
+        };
+    }
+    
+    return results;
+}
+
+// アルゴリズム比較結果をUIに表示する関数
+function displayAlgorithmResults(results) {
+    let html = `
+        <div style="border: 2px solid #007bff; padding: 20px; margin: 10px 0; border-radius: 10px; background-color: #f8f9fa;">
+            <h3>🔬 アルゴリズム比較結果</h3>
+    `;
+    
+    // 小さなデータセットの結果
+    html += `
+        <div style="margin: 15px 0; padding: 15px; border: 1px solid #dee2e6; border-radius: 5px; background-color: white;">
+            <h4>📊 小さなデータセット (${results.smallDataset.dataSize}件)</h4>
+            <p><strong>バブルソート:</strong> ${results.smallDataset.bubbleTime}ms</p>
+            <p><strong>クイックソート:</strong> ${results.smallDataset.quickTime}ms</p>
+            <p><em>小さなデータセットでは差が分かりにくい場合があります</em></p>
+        </div>
+    `;
+    
+    // 大きなデータセットの結果
+    html += `
+        <div style="margin: 15px 0; padding: 15px; border: 1px solid #dee2e6; border-radius: 5px; background-color: white;">
+            <h4>📈 大きなデータセット (${results.largeDataset.dataSize}件)</h4>
+            <p><strong>バブルソート:</strong> ${results.largeDataset.bubbleTime}ms</p>
+            <p><strong>クイックソート:</strong> ${results.largeDataset.quickTime}ms</p>
+            <p><strong>効率性の差:</strong> ${results.largeDataset.efficiencyRatio}倍</p>
+            ${results.largeDataset.efficiencyRatio > 1 ? 
+                '<p style="color: green;">✅ クイックソートの方が効率的です！</p>' : 
+                '<p style="color: orange;">⚠️ 予想外の結果です</p>'
+            }
+        </div>
+    `;
+    
+    // リポジトリデータの結果
+    if (results.repositoryData) {
+        html += `
+            <div style="margin: 15px 0; padding: 15px; border: 1px solid #dee2e6; border-radius: 5px; background-color: white;">
+                <h4>📁 実際のリポジトリデータ (${results.repositoryData.dataSize}件)</h4>
+                <p><strong>バブルソート:</strong> ${results.repositoryData.bubbleTime}ms</p>
+                <p><strong>クイックソート:</strong> ${results.repositoryData.quickTime}ms</p>
+                <p><strong>理論計算量比較:</strong></p>
+                <ul>
+                    <li>バブルソート: O(n²) = ${results.repositoryData.theoreticalBubble}回の比較</li>
+                    <li>クイックソート: O(n log n) ≈ ${results.repositoryData.theoreticalQuick}回の比較</li>
+                </ul>
+            </div>
+        `;
+    }
+    
+    html += `
+        <div style="margin-top: 20px; padding: 15px; background-color: #e7f3ff; border-radius: 5px;">
+            <h4>💡 学習ポイント</h4>
+            <ul>
+                <li><strong>計算量:</strong> バブルソートはO(n²)、クイックソートはO(n log n)</li>
+                <li><strong>データ量の影響:</strong> データが大きくなるほど、アルゴリズムの効率性の差が現れる</li>
+                <li><strong>実装の複雑さ:</strong> クイックソートは実装が複雑だが、大きなデータセットでは圧倒的に効率的</li>
+                <li><strong>実際の選択:</strong> 小さなデータセットではシンプルなアルゴリズム、大きなデータセットでは効率的なアルゴリズムを選択</li>
+            </ul>
+        </div>
+    </div>
+    `;
+    
+    algorithmResults.innerHTML = html;
+}
+
+// 11. 計算科学基礎：アルゴリズムの計算量比較
+function demonstrateAlgorithmComplexity() {
+    console.log("=== アルゴリズム計算量の比較 ===");
+    
+    const testData = [5, 2, 8, 1, 9, 3, 7, 4, 6];
+    console.log("テストデータ:", testData);
+    
+    // バブルソート（O(n²)）
+    const bubbleStart = performance.now();
+    const bubbleResult = bubbleSort([...testData], 'value');
+    const bubbleTime = performance.now() - bubbleStart;
+    
+    console.log(`バブルソート: ${bubbleTime.toFixed(3)}ms (O(n²))`);
+    
+    // クイックソート（O(n log n)）
+    const quickStart = performance.now();
+    const quickResult = quickSort([...testData], 'value');
+    const quickTime = performance.now() - quickStart;
+    
+    console.log(`クイックソート: ${quickTime.toFixed(3)}ms (O(n log n))`);
+    
+    // 大きなデータセットでの比較
+    console.log("\n=== 大きなデータセットでの比較 ===");
+    const largeDataset = generateLargeDataset(1000);
+    console.log(`大きなデータセット生成: ${largeDataset.length}件`);
+    
+    // バブルソート（大きなデータ）
+    const bubbleLargeStart = performance.now();
+    const bubbleLargeResult = bubbleSort([...largeDataset], 'value');
+    const bubbleLargeTime = performance.now() - bubbleLargeStart;
+    
+    console.log(`バブルソート（1000件）: ${bubbleLargeTime.toFixed(3)}ms`);
+    
+    // クイックソート（大きなデータ）
+    const quickLargeStart = performance.now();
+    const quickLargeResult = quickSort([...largeDataset], 'value');
+    const quickLargeTime = performance.now() - quickLargeStart;
+    
+    console.log(`クイックソート（1000件）: ${quickLargeTime.toFixed(3)}ms`);
+    
+    // 効率性の比較
+    if (quickLargeTime < bubbleLargeTime) {
+        console.log("✅ 大きなデータセットではクイックソートの方が効率的です！");
+        console.log(`効率性の差: ${(bubbleLargeTime / quickLargeTime).toFixed(2)}倍`);
+    } else {
+        console.log("⚠️ 予想外の結果です。実装を確認してください。");
+    }
+    
+    // 実際のリポジトリデータがある場合は比較
+    if (reposData.length > 0) {
+        console.log("\n=== 実際のリポジトリデータでの比較 ===");
+        console.log(`リポジトリ数: ${reposData.length}件`);
+        
+        // バブルソート（リポジトリ名順）
+        const bubbleRepoStart = performance.now();
+        const bubbleRepoResult = bubbleSort([...reposData], 'name');
+        const bubbleRepoTime = performance.now() - bubbleRepoStart;
+        
+        console.log(`バブルソート（リポジトリ名）: ${bubbleRepoTime.toFixed(3)}ms`);
+        
+        // クイックソート（リポジトリ名順）
+        const quickRepoStart = performance.now();
+        const quickRepoResult = quickSort([...reposData], 'name');
+        const quickRepoTime = performance.now() - quickRepoStart;
+        
+        console.log(`クイックソート（リポジトリ名）: ${quickRepoTime.toFixed(3)}ms`);
+        
+        // 詳細な分析
+        console.log("\n=== 詳細分析 ===");
+        console.log(`データ量: ${reposData.length}件`);
+        console.log(`バブルソート理論計算量: O(${reposData.length}²) = ${reposData.length * reposData.length}回の比較`);
+        console.log(`クイックソート理論計算量: O(${reposData.length} log ${reposData.length}) ≈ ${Math.floor(reposData.length * Math.log2(reposData.length))}回の比較`);
+        
+        if (quickRepoTime < bubbleRepoTime) {
+            console.log("✅ 実際のデータではクイックソートの方が効率的です！");
+        } else {
+            console.log("⚠️ データ量が少ないため、差が分かりにくい場合があります");
+            console.log("💡 より大きなデータセットで試してみてください");
+        }
+    } else {
+        console.log("リポジトリデータがありません。先にリポジトリを取得してください。");
+    }
+}
+
+// 大きなデータセットを生成する関数
+function generateLargeDataset(size) {
+    const dataset = [];
+    for (let i = 0; i < size; i++) {
+        dataset.push(Math.floor(Math.random() * 10000));
+    }
+    return dataset;
+}
+
+// ページ読み込み完了時の処理
+window.addEventListener('load', function() {
+    console.log("ページ読み込み完了 - リポジトリを取得するとアルゴリズム比較が実行されます");
+});
+
+console.log("Day 6のAPI通信機能が準備完了！");
+
         </script>
     </body>
 </html>
