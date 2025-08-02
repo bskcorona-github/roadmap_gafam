@@ -110,6 +110,7 @@
 - **記録フォーマット**：Markdown形式、日付・時間・成果物ファイル・レビュー結果を含む
 - **タスクリスト更新**：タスク完了時は必ず `docs/tasklist.md` を更新し、完了したタスクを[x]に変更、進捗サマリーも同時に更新する
 - **Git完全ワークフロー**：進捗記録とタスクリスト更新後は必ず `git add .` → `git commit -m "適切なメッセージ"` → `git push` まで実行する
+- **週末準備**：Week完了時に次のWeekの準備（tasklist.md更新、week{N}.md作成、学習計画策定）を必ず実行する
 
 ### 13) レビューの型（毎回の提出物に対して）
 - **Rubric**：Correctness / Readability / Testing / Security / Perf / UX を各1〜5で簡易採点し、**次アクションを1つだけ**提示。  
